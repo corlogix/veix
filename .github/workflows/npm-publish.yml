@@ -43,10 +43,13 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # INSTAL
-      # - run: npm ci
+      - run: npm ci
 
       # BUILD
-      # - run: npm run build
+      - run: npm run build
+
+      # PUBLISH
+      - run: npm run publish
 
   # publish-npm:
   #   needs: build
