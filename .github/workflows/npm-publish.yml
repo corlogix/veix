@@ -14,27 +14,55 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - run: npm ci
-      - run: npm run build
 
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      # CHECKOUT
+      - name: checkout
+        uses: actions/checkout@v1
+
+      # SETUP
+      - name: setup
+        uses: actions/setup-node@v2
         with:
           node-version: 14
-          registry-url: https://registry.npmjs.org/
-      - run: |
-          git config --global user.name corlogix
-          git config --global user.email corlogixco@gmail.com
-      - run: npm ci
-      - run: npm run build
-      - run: npm run publish
+      
+      - name: Configure CI Git User
+        run: |
+          git config --global user.name '@corlogixco'
+          git config --global user.email 'corlogixco@gmail.com'
+          git remote set-url origin https://$GITHUB_ACTOR:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
+          git remote -v
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Authenticate with Registry
+        run: |
+          npm logout
+          echo "registry=http://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # INSTAL
+      # - run: npm ci
+
+      # BUILD
+      # - run: npm run build
+
+  # publish-npm:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+  #         registry-url: https://registry.npmjs.org/
+  #     - run: |
+  #         git config --global user.name corlogix
+  #         git config --global user.email corlogixco@gmail.com
+  #     - run: npm ci
+  #     - run: npm run build
+  #     - run: npm run publish
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
