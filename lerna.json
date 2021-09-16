@@ -1,16 +1,19 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.0",
   "packages": [
     "packages/*"
   ],
   "compands": {
-    "publish": {
+    "version": {
+      "exact": true,
       "conventionalCommits": true,
+      "message": "chore(release): %s [skip ci]"
+    },
+    "publish": {
       "ignoreChanges": [
         "*.md",
         "*.sh"
-      ],
-      "message": "chore: published artifacts [skip ci]"
+      ]
     },
     "bootstrap": {
       "npmClientArgs": [
