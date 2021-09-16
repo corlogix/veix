@@ -31,6 +31,8 @@ jobs:
         run: |
           git config --global user.name '@corlogixco'
           git config --global user.email 'corlogixco@gmail.com'
+          git remote set-url origin https://$GITHUB_ACTOR:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
+          git checkout "${GITHUB_REF:11}" && git pull
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
