@@ -4,46 +4,69 @@
 name: Node.js Package
 
 on:
+  push:
+    branches:
+      - 'releases/**'
   release:
     types: [created]
 
-jobs:
-  build:
+jobs:    
+  PUBLISHER:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+
+      # CHECKOUT
+      - name: checkout
+        uses: actions/checkout@v1
+
+      # SETUP
+      - name: setup
+        uses: actions/setup-node@v2
         with:
           node-version: 14
+      
+      - name: Configure CI Git User
+        # git remote set-url origin https://$GITHUB_ACTOR:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
+        # git remote -v
+        run: |
+          git config --global user.name '@corlogixco'
+          git config --global user.email 'corlogixco@gmail.com'
+          git remote set-url origin https://$GITHUB_ACTOR:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
+          git checkout "${GITHUB_REF:11}" && git pull
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Authenticate with Registry
+        run: |
+          echo "registry=http://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # INSTAL
+      - run: npm ci
+
+      # BUILD
       - run: npm run build
 
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
-      - run: npm run build
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      # PUBLISH
+      - run: npm run publish
 
-  publish-gpr:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-          registry-url: https://npm.pkg.github.com/
-      - run: npm run build
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
+  # publish-npm:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+  #         registry-url: https://registry.npmjs.org/
+  #     - run: |
+  #         git config --global user.name corlogix
+  #         git config --global user.email corlogixco@gmail.com
+  #     - run: npm ci
+  #     - run: npm run build
+  #     - run: npm run publish
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
