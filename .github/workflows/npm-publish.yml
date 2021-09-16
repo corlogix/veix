@@ -11,6 +11,14 @@ on:
     types: [created]
 
 jobs:
+  default:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Git
+        run: |
+          git config --global user.name corlogix
+          git config --global user.email corlogixco@gmail.com      
+    
   build:
     runs-on: ubuntu-latest
     steps:
