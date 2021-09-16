@@ -11,7 +11,7 @@ on:
     types: [created]
 
 jobs:    
-  build:
+  PUBLISHER:
     runs-on: ubuntu-latest
     steps:
 
@@ -26,11 +26,11 @@ jobs:
           node-version: 14
       
       - name: Configure CI Git User
+        # git remote set-url origin https://$GITHUB_ACTOR:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
+        # git remote -v
         run: |
           git config --global user.name '@corlogixco'
           git config --global user.email 'corlogixco@gmail.com'
-          git remote set-url origin https://$GITHUB_ACTOR:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
-          git remote -v
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
