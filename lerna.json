@@ -3,14 +3,18 @@
   "packages": [
     "packages/*"
   ],
-  "compands": {
-    "publish": {
+  "command": {
+    "version": {
+      "exact": true,
       "conventionalCommits": true,
+      "message": "chore(release): %s [skip ci]",
+      "changelogPreset": "@pragmatics/preset"
+    },
+    "publish": {
       "ignoreChanges": [
         "*.md",
         "*.sh"
-      ],
-      "message": "chore: published artifacts [skip ci]"
+      ]
     },
     "bootstrap": {
       "npmClientArgs": [
