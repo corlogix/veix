@@ -1,0 +1,23 @@
+{
+  "name": "sandbox",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build-app": "webpack",
+    "watch": "webpack serve --mode development",
+    "start": "vite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/corlogix/veix.git"
+  },
+  "author": "corlogixco@gmail.com",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/corlogix/veix/issues"
+  },
+  "homepage": "https://github.com/corlogix/veix#readme",
+  "dependencies": {
+    "veix": "0.0.1"
+  }
+}

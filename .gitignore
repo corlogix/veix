@@ -105,3 +105,6 @@ dist
 
 # CI
 .npmrc
+
+# Build
+lib
