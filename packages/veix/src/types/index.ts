@@ -6,8 +6,8 @@ export type VeixElement = {
     children: VeixNodeList;
     etc;
   };
-  className: string;
-  style: string;
+  className?: string;
+  style?: string;
   events?: Object;
   dom?: Node;
 }
